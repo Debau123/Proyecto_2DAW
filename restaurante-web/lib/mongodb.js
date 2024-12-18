@@ -20,6 +20,7 @@ async function connectMongo() {
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
+      writeConcern: { w: 'majority' }, // Configuración correcta para un Replica Set
     });
   }
 

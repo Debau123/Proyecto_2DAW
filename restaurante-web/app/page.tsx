@@ -1,14 +1,49 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/autoplay';
 import { Autoplay } from 'swiper/modules';
 
 export default function Home() {
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  // Validar el token al cargar la página
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/users/checkAuth');
+        const data = await res.json();
+
+        if (data.success) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error('Error al validar la sesión:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    checkAuth();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-10">Cargando...</div>;
+  }
+
   return (
     <div>
-      
+      {/* Mensaje de bienvenida si el usuario está autenticado */}
+      {user && (
+        <div className="bg-green-200 text-green-900 p-4 text-center">
+          <p>Bienvenido de nuevo, <strong>{user.email}</strong></p>
+        </div>
+      )}
 
       {/* Sección Carrusel */}
       <div className="relative h-screen flex items-center justify-center">
@@ -67,25 +102,39 @@ export default function Home() {
         </p>
       </div>
 
-    {/* Sección con Cajas */}
-<div className="bg-gray-200 py-10 px-5">
-  <h2 className="text-3xl font-bold text-center mb-6 text-blue-900">Descubre Nuestro Restaurante</h2>
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-      <h3 className="text-2xl font-semibold mb-3 text-blue-900">Gastronomía Local</h3>
-      <p className="text-gray-700">Disfruta de platos elaborados con ingredientes frescos y de temporada.</p>
-    </div>
-    <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-      <h3 className="text-2xl font-semibold mb-3 text-blue-900">Ubicación Inigualable</h3>
-      <p className="text-gray-700">Rodeado de naturaleza en plena Sierra del Espadán.</p>
-    </div>
-    <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-      <h3 className="text-2xl font-semibold mb-3 text-blue-900">Reserva Fácil</h3>
-      <p className="text-gray-700">Realiza tu reserva online en tan solo unos clics.</p>
-    </div>
-  </div>
-</div>
-
+      {/* Sección con Cajas */}
+      <div className="bg-gray-200 py-10 px-5">
+        <h2 className="text-3xl font-bold text-center mb-6 text-blue-900">
+          Descubre Nuestro Restaurante
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
+            <h3 className="text-2xl font-semibold mb-3 text-blue-900">
+              Gastronomía Local
+            </h3>
+            <p className="text-gray-700">
+              Disfruta de platos elaborados con ingredientes frescos y de
+              temporada.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
+            <h3 className="text-2xl font-semibold mb-3 text-blue-900">
+              Ubicación Inigualable
+            </h3>
+            <p className="text-gray-700">
+              Rodeado de naturaleza en plena Sierra del Espadán.
+            </p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
+            <h3 className="text-2xl font-semibold mb-3 text-blue-900">
+              Reserva Fácil
+            </h3>
+            <p className="text-gray-700">
+              Realiza tu reserva online en tan solo unos clics.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
