@@ -33,6 +33,7 @@ export async function POST(req) {
       );
     }
 
+    // Crear el token de sesión y configurarlo como cookie segura
     const sessionToken = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
@@ -40,8 +41,14 @@ export async function POST(req) {
     );
 
     return new Response(
-      JSON.stringify({ success: true, token: sessionToken }),
-      { status: 200 }
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: {
+          'Set-Cookie': `sessionToken=${sessionToken}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600`,
+          'Content-Type': 'application/json'
+        }
+      }
     );
   } catch (error) {
     console.error('Error:', error);

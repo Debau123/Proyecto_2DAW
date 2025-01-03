@@ -6,14 +6,37 @@ export default function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Comprueba si hay token
+    const checkSession = async () => {
+      try {
+        const res = await fetch("/api/users/checkAuth", {
+          method: "GET",
+          credentials: "include", // Incluye cookies en la solicitud
+        });
+        if (res.ok) {
+          setIsLoggedIn(true); // Usuario autenticado
+        } else {
+          setIsLoggedIn(false); // Usuario no autenticado
+        }
+      } catch (error) {
+        console.error("Error al verificar sesión:", error);
+        setIsLoggedIn(false); // En caso de error, no hay sesión activa
+      }
+    };
+
+    checkSession();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    window.location.href = "/"; // Redirige al inicio
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/users/logout", {
+        method: "POST",
+        credentials: "include", // Incluye cookies en la solicitud
+      });
+      setIsLoggedIn(false); // Actualiza el estado
+      window.location.href = "/"; // Redirige al inicio
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
   };
 
   return (

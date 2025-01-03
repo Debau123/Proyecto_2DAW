@@ -2,7 +2,7 @@ import connectMongo from '../../../../lib/mongodb';
 import User from '../../../../lib/models/User';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
-import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req) {
   await connectMongo();
@@ -22,8 +22,12 @@ export async function POST(req) {
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generar un token de verificación único
-    const verificationToken = crypto.randomBytes(32).toString('hex');
+    // Generar un token de verificación único usando JWT
+    const verificationToken = jwt.sign(
+      { email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' } // Expira en 1 hora
+    );
     console.log('Token generado para el usuario:', verificationToken); // LOG 2
 
     // Crear el usuario en la base de datos
@@ -33,9 +37,8 @@ export async function POST(req) {
       password: hashedPassword,
       mobile,
       verified: false,
-      verificationToken,
     });
-    console.log('Usuario guardado en la base de datos con token:', newUser.verificationToken); // LOG 3
+    console.log('Usuario guardado en la base de datos:', newUser.email); // LOG 3
 
     // Configuración de nodemailer para enviar el correo
     const transporter = nodemailer.createTransport({

@@ -3,14 +3,12 @@ import User from '../../../../lib/models/User';
 import jwt from 'jsonwebtoken';
 
 export async function GET(req) {
+  await connectMongo();
+
+  const url = new URL(req.url);
+  const token = url.searchParams.get('token');
+
   try {
-    // Conectar a la base de datos
-    await connectMongo();
-
-    // Obtener el token desde la URL
-    const { searchParams } = new URL(req.url);
-    const token = searchParams.get('token');
-
     if (!token) {
       return new Response(
         JSON.stringify({ success: false, error: 'Token no proporcionado.' }),
@@ -18,43 +16,47 @@ export async function GET(req) {
       );
     }
 
-    // Buscar el usuario por el token
-    const user = await User.findOne({ verificationToken: token });
+    // Verificar y decodificar el token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: decoded.email });
 
     if (!user) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Token inválido o expirado.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: 'Usuario no encontrado.' }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Marcar el usuario como verificado
+    if (user.verified) {
+      return new Response(
+        JSON.stringify({ success: true, message: 'Correo ya verificado.' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Actualizar el estado de verificación
     user.verified = true;
-    user.verificationToken = null; // Limpiar el token después de verificar
     await user.save();
 
-    // Generar un token JWT
+    // Crear un token de sesión y configurarlo como cookie segura
     const sessionToken = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' } // Token válido por 1 hora
+      { expiresIn: '1h' }
     );
 
-    // Configurar la cookie correctamente
-    const headers = new Headers();
-    headers.append(
-      'Set-Cookie',
-      `token=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=3600`
-    );
-
-    // Redirigir al inicio
-    headers.append('Location', '/');
-    return new Response(null, { status: 302, headers });
+    return new Response(null, {
+      status: 302, // Redirección
+      headers: {
+        'Set-Cookie': `sessionToken=${sessionToken}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=3600`,
+        Location: '/', // Redirigir al inicio
+      },
+    });
   } catch (error) {
-    console.error('Error al verificar el correo:', error.message);
+    console.error('Error al verificar el token:', error.message);
     return new Response(
-      JSON.stringify({ success: false, error: 'Error al verificar el correo.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: false, error: 'Token inválido o expirado.' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
