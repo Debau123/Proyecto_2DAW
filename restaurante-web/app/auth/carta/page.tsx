@@ -120,12 +120,12 @@ export default function CartaPage() {
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-32 h-32 object-cover rounded-full mb-4 shadow-md"
+                  className="w-40 h-40 object-cover rounded-lg mb-4 shadow-md"
                 />
-                <h3 className="text-lg font-bold">{item.name}</h3>
+                <h3 className="text-lg font-bold text-center">{item.name}</h3>
                 <p className="text-gray-600 text-sm mb-2 text-center">{item.description}</p>
                 <p className="text-blue-500 font-semibold mb-2">{item.price}</p>
-                {item.allergens && (
+                {"allergens" in item && item.allergens && (
                   <p className="text-sm text-red-500">
                     Alérgenos: {item.allergens.join(", ")}
                   </p>
