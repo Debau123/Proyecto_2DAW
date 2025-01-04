@@ -14,8 +14,260 @@
   }
 }
 
+/* Fondo general */
 body {
   color: var(--foreground);
-  background: var(--background);
+  background-color: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Formulario centrado */
+.reservation-form {
+  max-width: 800px; /* Más ancho */
+  margin: 4rem auto; /* Centrado y más espacio vertical */
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  padding: 40px; /* Más espacio interno */
+}
+
+.reservation-form h2 {
+  color: #333;
+  text-align: center;
+  font-size: 28px; /* Tamaño más grande */
+  margin-bottom: 30px;
+}
+
+.reservation-form p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Estilos para los campos de selección */
+.reservation-form select,
+.reservation-form input[type="number"] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 14px;
+  border-radius: 8px; /* Bordes redondeados */
+  border: 2px solid #007bff; /* Borde azul */
+  font-size: 18px; /* Texto más grande */
+  background-color: #ffffff; /* Fondo blanco */
+  color: #333; /* Texto oscuro */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  transition: all 0.3s ease;
+}
+
+/* Placeholder visible */
+.reservation-form select option[value=""] {
+  color: #888; /* Placeholder gris */
+  font-style: italic;
+}
+
+/* Hover y focus mejorados */
+.reservation-form select:hover,
+.reservation-form input[type="number"]:hover {
+  background-color: #e8f4ff; /* Fondo azul claro */
+  border-color: #0056b3; /* Borde azul oscuro */
+}
+
+.reservation-form select:focus,
+.reservation-form input[type="number"]:focus {
+  outline: none;
+  border-color: #0056b3; /* Borde azul oscuro */
+  background-color: #ffffff; /* Fondo blanco */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Efecto de foco */
+}
+
+/* Botón de confirmación */
+.reservation-form button {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  font-size: 20px; /* Más grande */
+  padding: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reservation-form button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05); /* Efecto de zoom */
+}
+
+/* Estilos personalizados para el calendario */
+.react-calendar {
+  width: 100%; /* Ocupa todo el ancho */
+  border: none;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  font-size: 20px; /* Tamaño más grande */
+}
+
+.react-calendar__navigation button {
+  color: #007bff;
+  font-weight: bold;
+  font-size: 22px; /* Más grande */
+  background: none;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #e8f4ff;
+  border-radius: 8px;
+}
+
+.react-calendar__month-view__weekdays {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.react-calendar__tile {
+  text-align: center;
+  padding: 25px; /* Más espacio */
+  border-radius: 10px;
+  background: none;
+  border: none;
+  font-size: 18px; /* Días más grandes */
+  transition: all 0.3s ease; /* Animación */
+}
+
+.react-calendar__tile:hover {
+  background-color: #e8f4ff;
+  border-radius: 10px;
+}
+
+.react-calendar__tile--now {
+  background-color: #cce5ff;
+  color: #007bff;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+/* Estilo para el día seleccionado */
+.react-calendar__tile--active {
+  background-color: #28a745 !important; /* Fondo verde */
+  color: white !important; /* Texto blanco */
+  font-weight: bold;
+  border-radius: 10px;
+  transform: scale(1.1); /* Efecto de zoom */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover sobre el día seleccionado */
+.react-calendar__tile--active:hover {
+  background-color: #218838 !important; /* Verde más oscuro */
+}
+
+/* Estilos para la página de Mis Reservas */
+.reservation-list {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.reservation-card {
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.reservation-card h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333333;
+}
+
+.reservation-card p {
+  margin: 5px 0;
+  color: #555555;
+  font-size: 16px;
+}
+
+.reservation-card .btn-cancel {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reservation-card .btn-cancel:hover {
+  background-color: #c82333;
+}
+/* Estilos para la lista de reservas */
+.reservation-list {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para cada card */
+.reservation-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reservation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Título y texto */
+.reservation-card h3 {
+  font-size: 18px;
+  margin: 0;
+  color: #333;
+}
+
+.reservation-card p {
+  font-size: 16px;
+  color: #555;
+  margin: 5px 0;
+}
+
+/* Botón de cancelar */
+.btn-cancel {
+  background-color: #dc3545;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
 }

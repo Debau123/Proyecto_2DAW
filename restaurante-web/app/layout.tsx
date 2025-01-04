@@ -12,12 +12,15 @@ const Navbar = () => {
       <div className="text-2xl font-bold">Restaurante Mar de Fulles</div>
       <div className="flex space-x-6">
         <a href="/" className="hover:underline">Inicio</a>
-        <a href="/carta" className="hover:underline">Carta</a>
+        <a href="/auth/carta" className="hover:underline">Carta</a>
+        {isLoggedIn && (
+          <a href="/auth/my-reservations" className="hover:underline">Mis Reservas</a>
+        )}
+        {isLoggedIn && (
+          <a href="/auth/reservations" className="hover:underline">Reservas</a>
+        )}
         {isLoggedIn ? (
-          <>
-            <a href="/reservas" className="hover:underline">Reservas</a>
-            <button onClick={logout} className="hover:underline">Logout</button>
-          </>
+          <button onClick={logout} className="hover:underline">Logout</button>
         ) : (
           <>
             <a href="/auth/login" className="hover:underline">Login</a>

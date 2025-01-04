@@ -48,7 +48,9 @@ export default function NavBar() {
         <div className="space-x-4">
           <Link href="/">Inicio</Link>
           <Link href="/carta">Carta</Link>
-          <Link href="/reservas">Reservas</Link>
+          <Link href="/auth/reservations">Reservas</Link>
+          <Link href="/auth/my-reservations">Mis Reservas</Link>
+
           {!isLoggedIn ? (
             <>
               <Link href="/login">Login</Link>

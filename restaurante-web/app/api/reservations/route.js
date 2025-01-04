@@ -1,30 +1,31 @@
 import connectMongo from '../../../lib/mongodb';
 import Reservation from '../../../lib/models/Reservation';
-import User from '../../../lib/models/User'; // Importamos el modelo de usuario
+import { getUserFromToken } from '../../../lib/auth';
 
-export async function POST(req) {
+export async function GET(req) {
+  await connectMongo();
+
   try {
-    await connectMongo();
-    const { userId, date, numberOfGuests } = await req.json();
-
-    // Verificar si el usuario existe
-    const userExists = await User.findById(userId);
-    if (!userExists) {
-      return new Response(
-        JSON.stringify({ error: 'El usuario no existe o no está registrado.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
+    // Obtener el usuario autenticado
+    const user = await getUserFromToken(req.headers.get('cookie'));
+    if (!user) {
+      return new Response(JSON.stringify({ success: false, error: 'No autorizado' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    // Crear la reserva si el usuario existe
-    const reservation = await Reservation.create({ userId, date, numberOfGuests });
+    // Obtener reservas del usuario autenticado
+    const reservations = await Reservation.find({ clientId: user._id });
+
     return new Response(
-      JSON.stringify({ message: 'Reserva creada con éxito', reservation }),
-      { status: 201, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: true, reservations }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
+    console.error('Error al obtener reservas:', error.message);
     return new Response(
-      JSON.stringify({ error: 'Error al crear la reserva', details: error.message }),
+      JSON.stringify({ success: false, error: 'Error en el servidor' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }

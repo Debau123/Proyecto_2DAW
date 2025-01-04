@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
 
 const ReservationSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
+  clientId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   date: { type: Date, required: true },
-  numberOfGuests: { type: Number, required: true },
+  time: { type: String, required: true },
+  numPeople: { type: Number, required: true },
+  status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'pending' },
 });
 
 const Reservation = mongoose.models.Reservation || mongoose.model('Reservation', ReservationSchema);
