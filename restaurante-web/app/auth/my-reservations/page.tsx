@@ -2,9 +2,18 @@
 
 import { useEffect, useState } from "react";
 
+// Define el tipo de cada reserva
+type Reservation = {
+  _id: string;
+  date: string;
+  time: string;
+  numPeople: number;
+  status: string;
+};
+
 export default function MyReservationsPage() {
-  const [reservations, setReservations] = useState([]);
-  const [error, setError] = useState("");
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -25,7 +34,7 @@ export default function MyReservationsPage() {
     fetchReservations();
   }, []);
 
-  const handleCancel = async (reservationId) => {
+  const handleCancel = async (reservationId: string) => {
     try {
       const res = await fetch(`/api/reservations/${reservationId}`, {
         method: "DELETE",

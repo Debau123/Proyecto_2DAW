@@ -1,6 +1,7 @@
 "use client"; // Esto convierte el archivo en un componente cliente
 
 import './globals.css';
+import { ReactNode } from 'react'; // Importamos el tipo ReactNode
 import { useAuth, AuthProvider } from '../lib/AuthContext'; // Importa el AuthContext
 
 // Navbar como un componente separado
@@ -32,7 +33,8 @@ const Navbar = () => {
   );
 };
 
-export default function RootLayout({ children }) {
+// Añadimos el tipo para `children`
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
       <html lang="en">
